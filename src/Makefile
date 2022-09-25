@@ -37,7 +37,7 @@ STDFLAGS	:=	-c	-Wall	-Werror	-Wextra	-std=c11	-pedantic	-g
 CFLAGS	?=	$(STDFLAGS)	$(ASAN)
 TST_CFLAGS	:=	-g	$(STDFLAGS)	#$(shell pkg-config --cflags check)
 GCOV_FLAGS	?=	-fprofile-arcs	-ftest-coverage
-TST_LIBS	?=	-lcheck
+TST_LIBS	?=	-lcheck	-lm	-lpthread	-lrt	-lsubunit
 ifeq	($(shell uname), Linux)
 TST_LIBS	=	-lcheck_pic	$(shell	pkg-config	--libs	check)	-lpthread	-lrt	-lm	-lsubunit
 endif

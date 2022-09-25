@@ -82,6 +82,7 @@ START_TEST(incorr_mtr1) {
   matrix_t a, b;
   s21_create_matrix(2, 3, &b);
   matrix_t result;
+  init_matrix(&a);
   a.rows = -1;
   int status = s21_mult_matrix(&a, &b, &result);
   ck_assert_int_eq(status, INCORRECT_MATRIX);
@@ -93,6 +94,7 @@ START_TEST(incorr_mtr2) {
   matrix_t a, b;
   s21_create_matrix(2, 3, &a);
   matrix_t result;
+  init_matrix(&b);
   b.columns = 0;
   int status = s21_mult_matrix(&a, &b, &result);
   ck_assert_int_eq(status, INCORRECT_MATRIX);
