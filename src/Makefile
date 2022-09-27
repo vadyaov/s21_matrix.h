@@ -35,7 +35,7 @@ MK	:=	mkdir	-p
 ASAN	:=	#-fsanitize=address	-g
 STDFLAGS	:=	-c	-Wall	-Werror	-Wextra	-std=c11	-pedantic	-g
 CFLAGS	?=	$(STDFLAGS)	$(ASAN)
-TST_CFLAGS	:=	-g	$(STDFLAGS)	#$(shell pkg-config --cflags check)
+TST_CFLAGS	:=	-g	$(STDFLAGS)	$(shell pkg-config --cflags check)
 GCOV_FLAGS	?=	-fprofile-arcs	-ftest-coverage
 TST_LIBS	?=	-lcheck	-lm	-lpthread	-lrt	-lsubunit
 ifeq	($(shell uname), Linux)
@@ -43,7 +43,7 @@ TST_LIBS	=	-lcheck_pic	$(shell	pkg-config	--libs	check)	-lpthread	-lrt	-lm	-lsub
 endif
 
 all:	$(TARGET)	test	#gcov_report
-
+	echo	$(TEST_OBJS)
 gcov_obj:	$(GCOV_OBJ)	Makefile
 
 $(TARGET):	$(OBJS)	Makefile
@@ -105,5 +105,4 @@ clean:
 	$(RM)	$(GCOV_OBJS)
 	$(RM)	$(TEST_SRC_DIR)/$(TEST_EXE)	$(TEST_SRC_DIR)/$(TEST_GCOV_EXE)
 	$(RM)	$(GCOV_INFO)
-#	$(RM)	-r	$(OBJ_DIR)
-#	$(RM)	-r	$(GCOV_TARGET)
+	$(RM)	-r	/coverage	
