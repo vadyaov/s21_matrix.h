@@ -60,7 +60,6 @@ test:	$(TARGET)	$(TEST_OBJ_DIR)/test.o	$(TEST_OBJS)	$(TEST_INC)	Makefile
 
 test_gcov:	$(TEST_TARGET)	 $(TEST_OBJ_DIR)/test.o	$(TEST_OBJS)
 	$(CC)	$(TEST_OBJS)	$(TEST_OBJ_DIR)/test.o	$(GCOV_FLAGS)	-o	$(TEST_SRC_DIR)/$(TEST_GCOV_EXE)	$(TST_LIBS)	-L.	$(TEST_TARGET)
-#	$(TEST_SRC_DIR)/test_gcov
 
 $(TEST_OBJ_DIR)/test.o:	tests/test.c
 	@$(MK) $(TEST_OBJ_DIR)
@@ -88,23 +87,21 @@ $(GCOV_INFO):	test_gcov
 	./$(TEST_SRC_DIR)/$(TEST_GCOV_EXE)
 	geninfo	$(TEST_OBJ_DIR)	-b	.	-o	./$(GCOV_INFO)
 
-
 open:
 	open	coverage/index.html
 
 leaks:
 	leaks -atExit -- $(TEST_SRC_DIR)
 
-valgrind:
+valgrind:  $(TEST_SRC_DIR)/$(TEST_EXE)
 	valgrind --leak-check=full $(TEST_SRC_DIR)/$(TEST_EXE)
 
 clean:
 	$(RM)	$(wildcard *.a)
-#	$(RM)	-r	$(TEST_OBJ_DIR)
+	$(RM)	-r	$(TEST_OBJ_DIR)
 	$(RM)	$(OBJS)
 	$(RM)	$(GCDA)
 	$(RM)	$(GCNO)
-	$(RM)	$(TEST_OBJS)
 	$(RM)	$(GCOV_OBJS)
 	$(RM)	$(TEST_SRC_DIR)/$(TEST_EXE)	$(TEST_SRC_DIR)/$(TEST_GCOV_EXE)
 	$(RM)	$(GCOV_INFO)
