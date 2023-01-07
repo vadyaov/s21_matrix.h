@@ -32,7 +32,7 @@ RAN	:=	ranlib
 RM	:=	rm	-f
 MK	:=	mkdir	-p
 
-ASAN	:=	#-fsanitize=address	-g
+ASAN	:=	#-fsanitize=address	-static-libasan	-g
 STDFLAGS	:=	-c	-Wall	-Werror	-Wextra	-std=c11	-pedantic	-g
 CFLAGS	?=	$(STDFLAGS)	$(ASAN)
 TST_CFLAGS	:=	-g	$(STDFLAGS)	$(shell pkg-config --cflags check)
@@ -94,6 +94,9 @@ open:
 
 leaks:
 	leaks -atExit -- $(TEST_SRC_DIR)
+
+valgrind:
+	valgrind --leak-check=full $(TEST_SRC_DIR)/$(TEST_EXE)
 
 clean:
 	$(RM)	$(wildcard *.a)
