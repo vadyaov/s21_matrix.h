@@ -209,26 +209,28 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
   double det = 0.0;
   init_matrix(result);
   int inverse_status = s21_determinant(A, &det);
-  if (fabs(det) < 1e-7) inverse_status = CALC_ERROR;
   if (inverse_status == OK) {
-    if (A->rows == 1) {
-      if (!s21_create_matrix(1, 1, result))
-        result->matrix[0][0] = (double)1 / det;
-    } else {
-      matrix_t calc_components, transpose;
-      if (!s21_transpose(A, &transpose)) {
-        if (!s21_calc_complements(&transpose, &calc_components)) {
-          if (s21_mult_number(&calc_components, (double)1 / det, result))
+    if (det) {
+      if (A->rows == 1) {
+        if (!s21_create_matrix(1, 1, result)) result->matrix[0][0] = 1 / det;
+      } else {
+        matrix_t calc_components, transpose;
+        if (!s21_calc_complements(A, &calc_components)) {
+          if (!s21_transpose(&calc_components, &transpose)) {
+            if (s21_mult_number(&transpose, (1.0 / det), result))
+              inverse_status = MEM_ALLOC_ERROR;
+            s21_remove_matrix(&transpose);
+            s21_remove_matrix(&calc_components);
+          } else {
             inverse_status = MEM_ALLOC_ERROR;
-          s21_remove_matrix(&transpose);
-          s21_remove_matrix(&calc_components);
+            s21_remove_matrix(&calc_components);
+          }
         } else {
           inverse_status = MEM_ALLOC_ERROR;
-          s21_remove_matrix(&transpose);
         }
-      } else {
-        inverse_status = MEM_ALLOC_ERROR;
       }
+    } else {
+      inverse_status = CALC_ERROR;
     }
   }
   return inverse_status;
